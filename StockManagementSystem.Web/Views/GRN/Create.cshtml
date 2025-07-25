@@ -1,0 +1,39 @@
+@model StockManagementSystem.Web.Models.GRNViewModel
+@{
+    ViewData["Title"] = "Create GRN";
+}
+<h2>Create GRN</h2>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Supplier</label>
+        <input asp-for="Supplier" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Date</label>
+        <input asp-for="Date" type="date" class="form-control" required />
+    </div>
+    <h4>Items</h4>
+    <div id="grn-items">
+        <!-- In a real app, use JS to add/remove items dynamically. For now, provide 3 rows. -->
+        @for (int i = 0; i < 3; i++)
+        {
+            <div class="form-row mb-2">
+                <input type="hidden" name="GRNItems[@i].GRNItemId" value="0" />
+                <div class="col">
+                    <input name="GRNItems[@i].ProductId" class="form-control" placeholder="ProductId" required />
+                </div>
+                <div class="col">
+                    <input name="GRNItems[@i].Qty" class="form-control" placeholder="Qty" required />
+                </div>
+                <div class="col">
+                    <input name="GRNItems[@i].UnitPrice" class="form-control" placeholder="Unit Price" required />
+                </div>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-2">@ViewBag.Error</div>
+    }
+</form> 

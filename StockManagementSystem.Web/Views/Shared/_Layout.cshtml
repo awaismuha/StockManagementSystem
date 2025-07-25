@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StockManagementSystem.Web</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/StockManagementSystem.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Stock Management</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/StockReport/RealTime">Stock</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/StockReport/LowStock">Low Stock</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/StockReport/Movements">Movements</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/StockReport/Summary">Summary</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/StockReport/Valuation">Valuation</a></li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("WarehouseStaff"))
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/Category">Categories</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/Product">Products</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/GRN">GRN</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/GIN">GIN</a></li>
+                        }
+                        @if (User.IsInRole("Admin") || User.IsInRole("Auditor"))
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/AuditLog">Audit Logs</a></li>
+                        }
+                        <li class="nav-item"><a class="nav-link" href="/Auth/Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Auth/Login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Auth/Register">Register</a></li>
+                    }
+                </ul>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <span class="navbar-text">Hello, @User.Identity.Name!</span>
+                }
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - StockManagementSystem.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,30 @@
+@model List<StockManagementSystem.Web.Models.StockItemViewModel>
+@{
+    ViewData["Title"] = "Real-Time Stock";
+}
+<h2>Real-Time Stock Levels</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>UOM</th>
+            <th>Stock Qty</th>
+            <th>Reorder Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.SKU</td>
+                <td>@item.Category</td>
+                <td>@item.UOM</td>
+                <td>@item.StockQty</td>
+                <td>@item.ReorderLevel</td>
+            </tr>
+        }
+    </tbody>
+</table> 

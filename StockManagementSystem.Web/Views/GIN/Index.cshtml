@@ -1,0 +1,31 @@
+@model List<StockManagementSystem.Web.Models.GINViewModel>
+@{
+    ViewData["Title"] = "GINs";
+}
+<h2>Goods Issued Notes (GIN)</h2>
+<a class="btn btn-primary mb-2" asp-action="Create">Add GIN</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Recipient</th>
+            <th>Date</th>
+            <th>Reason</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Recipient</td>
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@item.Reason</td>
+                <td>
+                    <form asp-action="Confirm" asp-route-id="@item.GINId" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> 

@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Register";
+}
+<h2>Register</h2>
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Role</label>
+        <select name="role" class="form-control" required>
+            <option value="Admin">Admin</option>
+            <option value="WarehouseStaff">Warehouse Staff</option>
+            <option value="Auditor">Auditor</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-2">@ViewBag.Error</div>
+    }
+</form> 

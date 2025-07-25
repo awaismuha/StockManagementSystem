@@ -1,0 +1,42 @@
+# .NET Core
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build Results
+[Dd]ebug/
+[Rr]elease/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# User-specific files
+*.swp
+*.bak
+*.tmp
+*.log
+
+# Publish
+publish/
+
+# Rider
+.idea/
+*.sln.iml
+
+# SQL Server
+*.mdf
+*.ldf
+
+# Others
+*.db
+*.sqlite
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt 

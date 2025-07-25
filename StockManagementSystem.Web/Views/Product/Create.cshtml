@@ -1,0 +1,43 @@
+@model StockManagementSystem.Web.Models.ProductViewModel
+@{
+    ViewData["Title"] = "Create Product";
+    var categories = ViewBag.Categories as List<StockManagementSystem.Web.Models.CategoryViewModel>;
+}
+<h2>Create Product</h2>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>SKU</label>
+        <input asp-for="SKU" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Category</label>
+        <select asp-for="CategoryId" class="form-control" required>
+            <option value="">Select Category</option>
+            @foreach (var cat in categories)
+            {
+                <option value="@cat.CategoryId">@cat.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>UOM</label>
+        <input asp-for="UOM" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Stock Qty</label>
+        <input asp-for="StockQty" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Reorder Level</label>
+        <input asp-for="ReorderLevel" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-2">@ViewBag.Error</div>
+    }
+</form> 

@@ -1,0 +1,40 @@
+@model StockManagementSystem.Web.Models.GINViewModel
+@{
+    ViewData["Title"] = "Create GIN";
+}
+<h2>Create GIN</h2>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Recipient</label>
+        <input asp-for="Recipient" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Date</label>
+        <input asp-for="Date" type="date" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Reason</label>
+        <input asp-for="Reason" class="form-control" />
+    </div>
+    <h4>Items</h4>
+    <div id="gin-items">
+        <!-- In a real app, use JS to add/remove items dynamically. For now, provide 3 rows. -->
+        @for (int i = 0; i < 3; i++)
+        {
+            <div class="form-row mb-2">
+                <input type="hidden" name="GINItems[@i].GINItemId" value="0" />
+                <div class="col">
+                    <input name="GINItems[@i].ProductId" class="form-control" placeholder="ProductId" required />
+                </div>
+                <div class="col">
+                    <input name="GINItems[@i].Qty" class="form-control" placeholder="Qty" required />
+                </div>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-2">@ViewBag.Error</div>
+    }
+</form> 

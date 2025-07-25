@@ -1,0 +1,47 @@
+@model StockManagementSystem.Web.Models.StockMovementViewModel
+@{
+    ViewData["Title"] = "Stock Movements";
+}
+<h2>Stock Movement History</h2>
+<h4>Goods Received Notes (GRN)</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Supplier</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var grn in Model.GRNs)
+        {
+            <tr>
+                <td>@grn.Supplier</td>
+                <td>@grn.Date.ToShortDateString()</td>
+                <td>@grn.Status</td>
+                <td>@grn.TotalAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h4>Goods Issued Notes (GIN)</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Recipient</th>
+            <th>Date</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var gin in Model.GINs)
+        {
+            <tr>
+                <td>@gin.Recipient</td>
+                <td>@gin.Date.ToShortDateString()</td>
+                <td>@gin.Reason</td>
+            </tr>
+        }
+    </tbody>
+</table> 

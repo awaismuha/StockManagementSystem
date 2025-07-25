@@ -1,0 +1,38 @@
+@model List<StockManagementSystem.Web.Models.ProductViewModel>
+@{
+    ViewData["Title"] = "Products";
+}
+<h2>Products</h2>
+<a class="btn btn-primary mb-2" asp-action="Create">Add Product</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>UOM</th>
+            <th>Stock Qty</th>
+            <th>Reorder Level</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.SKU</td>
+                <td>@item.CategoryName</td>
+                <td>@item.UOM</td>
+                <td>@item.StockQty</td>
+                <td>@item.ReorderLevel</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@item.ProductId" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> 

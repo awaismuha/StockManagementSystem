@@ -1,0 +1,36 @@
+@model List<StockManagementSystem.Web.Models.GRNViewModel>
+@{
+    ViewData["Title"] = "GRNs";
+}
+<h2>Goods Received Notes (GRN)</h2>
+<a class="btn btn-primary mb-2" asp-action="Create">Add GRN</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Supplier</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Supplier</td>
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@item.Status</td>
+                <td>@item.TotalAmount</td>
+                <td>
+                    @if (item.Status != "Approved")
+                    {
+                        <form asp-action="Approve" asp-route-id="@item.GRNId" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> 

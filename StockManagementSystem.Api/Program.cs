@@ -8,9 +8,17 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Dynamic connection string detection
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+{
+    // Fallback to LocalDB if no connection string is provided
+    connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=StockManagementDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+}
+
 // Add DbContext
 builder.Services.AddDbContext<StockDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -38,8 +46,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add Controllers
-builder.Services.AddControllers();
+// Add Controllers with JSON configuration to handle circular references
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.MaxDepth = 64;
+    });
 
 // Add Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -68,11 +81,20 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Seed roles and admin user
+// Seed roles and admin user with error handling
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await StockManagementSystem.Api.Models.DbInitializer.SeedRolesAndAdminAsync(services);
+    try
+    {
+        await StockManagementSystem.Api.Models.DbInitializer.SeedRolesAndAdminAsync(services);
+        Console.WriteLine("Database initialized successfully!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error initializing database: {ex.Message}");
+        Console.WriteLine("Please ensure SQL Server or LocalDB is installed and running.");
+    }
 }
 
 if (app.Environment.IsDevelopment())
@@ -81,7 +103,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection if HTTPS is configured
+if (builder.Configuration["ASPNETCORE_URLS"]?.Contains("https") == true || 
+    builder.Configuration["Kestrel:Endpoints:Https"] != null)
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

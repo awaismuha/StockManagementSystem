@@ -1,8 +1,154 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 mb-4">📊 Stock Management Dashboard</h1>
+            <p class="lead">Welcome back, <strong>@User.Identity?.Name</strong>!</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">📦 Stock Overview</h5>
+                    <p class="card-text">View real-time stock levels and inventory status</p>
+                    <a href="/StockReport/RealTime" class="btn btn-light">View Stock</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">⚠️ Low Stock Alerts</h5>
+                    <p class="card-text">Check products that need reordering</p>
+                    <a href="/StockReport/LowStock" class="btn btn-dark">View Alerts</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Stock Valuation</h5>
+                    <p class="card-text">See the total value of your inventory</p>
+                    <a href="/StockReport/Valuation" class="btn btn-light">View Valuation</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">📈 Stock Movements</h5>
+                    <p class="card-text">Track inventory changes over time</p>
+                    <a href="/StockReport/Movements" class="btn btn-light">View Movements</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("WarehouseStaff"))
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3>🛠️ Management Tools</h3>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📋 Categories</h5>
+                        <a href="/Category" class="btn btn-outline-primary">Manage</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📦 Products</h5>
+                        <a href="/Product" class="btn btn-outline-primary">Manage</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📥 GRN</h5>
+                        <a href="/GRN" class="btn btn-outline-success">Goods Received</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📤 GIN</h5>
+                        <a href="/GIN" class="btn btn-outline-warning">Goods Issued</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📊 Summary</h5>
+                        <a href="/StockReport/Summary" class="btn btn-outline-info">View Report</a>
+                    </div>
+                </div>
+            </div>
+            @if (User.IsInRole("Admin") || User.IsInRole("Auditor"))
+            {
+                <div class="col-md-2">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">📝 Audit Logs</h5>
+                            <a href="/AuditLog" class="btn btn-outline-secondary">View Logs</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>🚀 Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="/Product/Create" class="list-group-item list-group-item-action">
+                            ➕ Add New Product
+                        </a>
+                        <a href="/GRN/Create" class="list-group-item list-group-item-action">
+                            📥 Create GRN (Goods Received)
+                        </a>
+                        <a href="/GIN/Create" class="list-group-item list-group-item-action">
+                            📤 Create GIN (Goods Issued)
+                        </a>
+                        <a href="/StockReport/LowStock" class="list-group-item list-group-item-action">
+                            ⚠️ Check Low Stock Items
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>ℹ️ System Information</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><strong>User:</strong> @User.Identity?.Name</li>
+                        <li><strong>Roles:</strong> @string.Join(", ", User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))</li>
+                        <li><strong>Login Time:</strong> @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</li>
+                        <li><strong>System:</strong> Stock Management System v1.0</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

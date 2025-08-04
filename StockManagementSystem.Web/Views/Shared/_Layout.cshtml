@@ -12,39 +12,65 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">Stock Management</a>
+            <a class="navbar-brand" href="/">📊 Stock Management</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item"><a class="nav-link" href="/StockReport/RealTime">Stock</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/StockReport/LowStock">Low Stock</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/StockReport/Movements">Movements</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/StockReport/Summary">Summary</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/StockReport/Valuation">Valuation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/">🏠 Dashboard</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown">
+                                📊 Reports
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/StockReport/RealTime">📦 Stock Overview</a></li>
+                                <li><a class="dropdown-item" href="/StockReport/LowStock">⚠️ Low Stock Alerts</a></li>
+                                <li><a class="dropdown-item" href="/StockReport/Movements">📈 Stock Movements</a></li>
+                                <li><a class="dropdown-item" href="/StockReport/Summary">📋 Summary Report</a></li>
+                                <li><a class="dropdown-item" href="/StockReport/Valuation">💰 Stock Valuation</a></li>
+                            </ul>
+                        </li>
                         @if (User.IsInRole("Admin") || User.IsInRole("WarehouseStaff"))
                         {
-                            <li class="nav-item"><a class="nav-link" href="/Category">Categories</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Product">Products</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/GRN">GRN</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/GIN">GIN</a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown">
+                                    🛠️ Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/Category">📋 Categories</a></li>
+                                    <li><a class="dropdown-item" href="/Product">📦 Products</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/GRN">📥 GRN (Goods Received)</a></li>
+                                    <li><a class="dropdown-item" href="/GIN">📤 GIN (Goods Issued)</a></li>
+                                </ul>
+                            </li>
                         }
                         @if (User.IsInRole("Admin") || User.IsInRole("Auditor"))
                         {
-                            <li class="nav-item"><a class="nav-link" href="/AuditLog">Audit Logs</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/AuditLog">📝 Audit Logs</a></li>
                         }
-                        <li class="nav-item"><a class="nav-link" href="/Auth/Logout">Logout</a></li>
+                    }
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                👤 @User.Identity.Name
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><span class="dropdown-item-text">Role: @string.Join(", ", User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value))</span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Auth/Logout">🚪 Logout</a></li>
+                            </ul>
+                        </li>
                     }
                     else
                     {
-                        <li class="nav-item"><a class="nav-link" href="/Auth/Login">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/Auth/Register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Auth/Login">🔑 Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Auth/Register">📝 Register</a></li>
                     }
                 </ul>
-                @if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    <span class="navbar-text">Hello, @User.Identity.Name!</span>
-                }
             </div>
         </nav>
     </header>

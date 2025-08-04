@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StockManagementSystem.Api.Models;
+using StockManagementSystem.Api.DTOs;
 
 namespace StockManagementSystem.Api.Controllers
 {
@@ -19,25 +20,86 @@ namespace StockManagementSystem.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _context.GRNs.Include(g => g.GRNItems).ThenInclude(i => i.Product).ToListAsync());
+            var grns = await _context.GRNs
+                .Include(g => g.GRNItems)
+                .ThenInclude(i => i.Product)
+                .ToListAsync();
+
+            var grnDtos = grns.Select(grn => new GRNDto
+            {
+                GRNId = grn.GRNId,
+                Supplier = grn.Supplier,
+                Date = grn.Date,
+                Status = grn.Status,
+                TotalAmount = grn.TotalAmount,
+                GRNItems = grn.GRNItems?.Select(item => new GRNItemDto
+                {
+                    GRNItemId = item.GRNItemId,
+                    GRNId = item.GRNId,
+                    ProductId = item.ProductId,
+                    ProductName = item.Product?.Name ?? "",
+                    ProductSKU = item.Product?.SKU ?? "",
+                    Qty = item.Qty,
+                    UnitPrice = item.UnitPrice
+                }).ToList()
+            }).ToList();
+
+            return Ok(grnDtos);
         }
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> Get(int id)
         {
-            var grn = await _context.GRNs.Include(g => g.GRNItems).ThenInclude(i => i.Product).FirstOrDefaultAsync(g => g.GRNId == id);
+            var grn = await _context.GRNs
+                .Include(g => g.GRNItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(g => g.GRNId == id);
+            
             if (grn == null) return NotFound();
-            return Ok(grn);
+            
+            var grnDto = new GRNDto
+            {
+                GRNId = grn.GRNId,
+                Supplier = grn.Supplier,
+                Date = grn.Date,
+                Status = grn.Status,
+                TotalAmount = grn.TotalAmount,
+                GRNItems = grn.GRNItems?.Select(item => new GRNItemDto
+                {
+                    GRNItemId = item.GRNItemId,
+                    GRNId = item.GRNId,
+                    ProductId = item.ProductId,
+                    ProductName = item.Product?.Name ?? "",
+                    ProductSKU = item.Product?.SKU ?? "",
+                    Qty = item.Qty,
+                    UnitPrice = item.UnitPrice
+                }).ToList()
+            };
+            
+            return Ok(grnDto);
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,WarehouseStaff")]
-        public async Task<IActionResult> Create(GRN grn)
+        public async Task<IActionResult> Create(CreateGRNDto createGrnDto)
         {
-            grn.Status = "Pending";
+            var grn = new GRN
+            {
+                Supplier = createGrnDto.Supplier,
+                Date = createGrnDto.Date,
+                Status = createGrnDto.Status,
+                GRNItems = createGrnDto.GRNItems?.Select(item => new GRNItem
+                {
+                    ProductId = item.ProductId,
+                    Qty = item.Qty,
+                    UnitPrice = item.UnitPrice
+                }).ToList()
+            };
+
             _context.GRNs.Add(grn);
             await _context.SaveChangesAsync();
+            
             return CreatedAtAction(nameof(Get), new { id = grn.GRNId }, grn);
         }
 

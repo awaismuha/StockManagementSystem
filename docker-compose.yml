@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - stockmanagement-network
+
+  # API Backend
+  api:
+    build:
+      context: ./StockManagementSystem.Api
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=StockManagementDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=true
+    ports:
+      - "5280:80"
+    depends_on:
+      - sqlserver
+    networks:
+      - stockmanagement-network
+
+  # Web Frontend
+  web:
+    build:
+      context: ./StockManagementSystem.Web
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ApiBaseUrl=http://api:80
+    ports:
+      - "5232:80"
+    depends_on:
+      - api
+    networks:
+      - stockmanagement-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  stockmanagement-network:
+    driver: bridge 

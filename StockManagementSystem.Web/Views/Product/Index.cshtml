@@ -11,6 +11,7 @@
             <th>SKU</th>
             <th>Category</th>
             <th>UOM</th>
+            <th>Unit Price</th>
             <th>Stock Qty</th>
             <th>Reorder Level</th>
             <th>Actions</th>
@@ -24,6 +25,7 @@
                 <td>@item.SKU</td>
                 <td>@item.CategoryName</td>
                 <td>@item.UOM</td>
+                <td>@item.UnitPrice.ToString("C")</td>
                 <td>@item.StockQty</td>
                 <td>@item.ReorderLevel</td>
                 <td>

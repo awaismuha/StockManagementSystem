@@ -10,5 +10,7 @@ namespace StockManagementSystem.Web.Models
         public string UOM { get; set; } = string.Empty;
         public int StockQty { get; set; }
         public int ReorderLevel { get; set; }
+        public decimal UnitPrice { get; set; }
+        public string? Description { get; set; }
     }
 } 
